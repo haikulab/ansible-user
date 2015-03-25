@@ -1,0 +1,7 @@
+---
+# default variables
+# please overwrite in the playbook.yml
+
+admin_username: some_admin
+admin_password: some_password
+admin_public_key: "{{ lookup('file', '/Users/filips01/.ssh/id_dsa.pub' ) }}"

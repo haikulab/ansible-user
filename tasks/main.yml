@@ -1,0 +1,26 @@
+---
+
+- name: Create Admin User
+  user: |
+    name={{ admin_username }}
+    password={{ admin_password }}
+    groups=sudo
+    append=yes
+    shell=/bin/bash
+
+- name: Add Admin Authorized Key
+  authorized_key:
+    user={{ admin_username }}
+    key="{{ admin_public_key }}"
+    state=present
+
+- name: Ensure github.com/bitbucket.org are a known host
+  lineinfile:
+    dest: /home/{{ admin_username }}/.ssh/known_hosts
+    create: yes
+    state: present
+    line: "{{ item.domain }}"
+    regexp: "{{ item.regexp }}"
+  with_items:
+    - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}", regexp: '^github\.com' }
+    - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}", regexp: '^bitbucket\.org' }
