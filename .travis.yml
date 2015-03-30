@@ -14,8 +14,11 @@ before_install:
   - export DEBIAN_FRONTEND=noninteractive
   - sudo apt-get remove -qq postgresql*
   - sudo apt-get update -qq
+  - sudo apt-get install git -qq -y
   - sudo apt-get -o Dpkg::Options::="--force-confnew" upgrade -qq -y
   - sudo apt-get -o Dpkg::Options::="--force-confnew" install aptitude -y
+  - cd /home/travis/build/haikulab/ && git clone https://github.com/haikulab/ansible-init.git
+  - cd ~/
 
 install:
   # Install Ansible.
@@ -39,8 +42,8 @@ script:
     || (echo 'Idempotence test: fail' && exit 1)
 
   ## Check to make sure git package is installed.
-  - >
-    sudo cat /etc/passwd | grep "some_admin"
-    | grep -q '/usr/bin/git'
-    && (echo 'Package install test: pass' && exit 0)
-    || (echo 'Package install test: fail' && exit 1)
+  # - >
+  #   sudo cat /etc/passwd | grep "some_admin"
+  #   | grep -q '/usr/bin/git'
+  #   && (echo 'Package install test: pass' && exit 0)
+  #   || (echo 'Package install test: fail' && exit 1)
