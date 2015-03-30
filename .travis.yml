@@ -14,8 +14,10 @@ before_install:
   - export DEBIAN_FRONTEND=noninteractive
   - sudo apt-get remove -qq postgresql*
   - sudo apt-get update -qq
+  - sudo apt-get install git -qq -y
   - sudo apt-get -o Dpkg::Options::="--force-confnew" upgrade -qq -y
   - sudo apt-get -o Dpkg::Options::="--force-confnew" install aptitude -y
+  - git clone git@github.com:haikulab/ansible-init.git
 
 install:
   # Install Ansible.
