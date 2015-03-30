@@ -18,6 +18,7 @@ before_install:
   - sudo apt-get -o Dpkg::Options::="--force-confnew" upgrade -qq -y
   - sudo apt-get -o Dpkg::Options::="--force-confnew" install aptitude -y
   - cd /home/travis/build/haikulab/ && git clone https://github.com/haikulab/ansible-init.git
+  - cd ~/
 
 install:
   # Install Ansible.
