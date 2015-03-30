@@ -1,0 +1,47 @@
+---
+language: python
+python: "2.7"
+
+env:
+  - SITE=test.yml
+
+notifications:
+  slack:
+    secure: KbZLE1Hv+2C/ip+mdzNHOaLBYHHLmdcl2ty0A9Sz/ov2isoq0HEefyAa70Bj3CgjzvKYaY1Dh9209c0Ve1D23KVE8DvYVKBHtIcQwjhC+BIp9azzHQ7tPcvMPSdpzuX16iaDfHCHDNjFVWj4XwXwnnucwDqnR6NBW3tMgon3Cx4=
+
+before_install:
+  # Make sure everything's up to date.
+  - export DEBIAN_FRONTEND=noninteractive
+  - sudo apt-get remove -qq postgresql*
+  - sudo apt-get update -qq
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" upgrade -qq -y
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" install aptitude -y
+  - sudo userdel some_admin
+
+install:
+  # Install Ansible.
+  - pip install ansible
+
+  # Add ansible.cfg to pick up roles path.
+  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
+
+script:
+  # Check the role/playbook's syntax.
+  - "ansible-playbook -i tests/inventory tests/$SITE --syntax-check"
+
+  # Run the role/playbook with ansible-playbook.
+  - "ansible-playbook -i tests/inventory tests/$SITE --connection=local"
+
+  # Run the role/playbook again, checking to make sure it's idempotent.
+  - >
+    ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
+  ## Check to make sure git package is installed.
+  - >
+    sudo cat /etc/passwd | grep "some_admin"
+    | grep -q '/usr/bin/git'
+    && (echo 'Package install test: pass' && exit 0)
+    || (echo 'Package install test: fail' && exit 1)

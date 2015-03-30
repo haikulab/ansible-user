@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  sudo: yes
+  remote_user: travis
+  roles:
+    - ansible-init
