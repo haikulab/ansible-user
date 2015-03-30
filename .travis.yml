@@ -41,8 +41,8 @@ script:
     || (echo 'Idempotence test: fail' && exit 1)
 
   ## Check to make sure git package is installed.
-  - >
-    sudo cat /etc/passwd | grep "some_admin"
-    | grep -q '/usr/bin/git'
-    && (echo 'Package install test: pass' && exit 0)
-    || (echo 'Package install test: fail' && exit 1)
+  # - >
+  #   sudo cat /etc/passwd | grep "some_admin"
+  #   | grep -q '/usr/bin/git'
+  #   && (echo 'Package install test: pass' && exit 0)
+  #   || (echo 'Package install test: fail' && exit 1)
